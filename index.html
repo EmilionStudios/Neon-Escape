@@ -47,7 +47,10 @@ h1 {
 
 .lane:nth-child(1) { left: 0; }
 .lane:nth-child(2) { left: 33.33%; }
-.lane:nth-child(3) { left: 66.66%; border: none; }
+.lane:nth-child(3) {
+    left: 66.66%;
+    border: none;
+}
 
 .player, .obstacle, .coin {
     position: absolute;
@@ -103,7 +106,7 @@ button:hover {
 }
 
 #message {
-    font-size: 30px;
+    font-size: 27px;
     font-weight: bold;
     color: #ff245c;
     text-shadow: 0 0 15px #ff245c;
@@ -154,6 +157,7 @@ input {
 <body>
 
 <h1>🚀 NEON ESCAPE</h1>
+
 <div id="score">Puntos: 0</div>
 
 <div id="game">
@@ -180,6 +184,7 @@ input {
 
 <div id="records">
     <h2>🏆 MEJORES 5</h2>
+
     <table>
         <thead>
             <tr>
@@ -187,6 +192,7 @@ input {
                 <th>Puntos</th>
             </tr>
         </thead>
+
         <tbody id="recordList"></tbody>
     </table>
 </div>
@@ -202,11 +208,14 @@ const nameBox = document.getElementById("nameBox");
 let lane = 1;
 let obstacleLane = 0;
 let coinLane = 2;
+
 let score = 0;
 let playing = false;
+let recovering = false;
+
 let gameLoop;
-let gameOverTimer;
-let ending = false;
+let rescueTimeout;
+let countdownInterval;
 
 const positions = [27, 137, 247];
 
@@ -216,22 +225,24 @@ function draw() {
     coin.style.left = positions[coinLane] + "px";
 }
 
-// Récords guardados
+// TOP 1 PROTEGIDO
 function getRecords() {
     const records = JSON.parse(
         localStorage.getItem("emilionstudios_neon_records") || "[]"
     );
 
-    const others = records.filter(
-        record => record.name !== "Emilio Nuñez"
+    const others = records.filter(record =>
+        record.name.normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase() !== "emilio nunez"
     );
+
+    others.sort((a, b) => b.score - a.score);
 
     return [
         { name: "Emilio Nuñez", score: 50000000 },
         ...others
-    ]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5);
+    ].slice(0, 5);
 }
 
 function storeRecords(records) {
@@ -256,18 +267,21 @@ function renderRecords() {
         nameCell.textContent =
             (index === 0 ? "👑 " : "") + record.name;
 
-        scoreCell.textContent = record.score.toLocaleString("en-US");
+        scoreCell.textContent =
+            record.score.toLocaleString("en-US");
 
         row.appendChild(nameCell);
         row.appendChild(scoreCell);
+
         list.appendChild(row);
     });
 
     storeRecords(records);
 }
 
+// MOVER JUGADOR
 function move(direction) {
-    if (!playing || ending) return;
+    if (!playing) return;
 
     lane += direction;
 
@@ -276,12 +290,21 @@ function move(direction) {
 
     draw();
 
+    // Si está en peligro, puede escapar
+    if (recovering) {
+        if (lane !== obstacleLane) {
+            rescuePlayer();
+        }
+        return;
+    }
+
+    // Si entra en el carril del obstáculo, comienza el peligro
     if (lane === obstacleLane) {
-        endGame();
+        startRescue();
     }
 }
 
-// Controles del teclado
+// CONTROLES DEL TECLADO
 document.addEventListener("keydown", function(event) {
     if (event.key === "ArrowLeft") {
         event.preventDefault();
@@ -294,9 +317,11 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
+// INICIAR PARTIDA
 function startGame() {
     clearInterval(gameLoop);
-    clearTimeout(gameOverTimer);
+    clearInterval(countdownInterval);
+    clearTimeout(rescueTimeout);
 
     lane = 1;
     obstacleLane = Math.floor(Math.random() * 3);
@@ -304,10 +329,10 @@ function startGame() {
 
     score = 0;
     playing = true;
-    ending = false;
+    recovering = false;
 
     nameBox.style.display = "none";
-    message.textContent = "¡Corre!";
+    message.textContent = "¡CORRE!";
     scoreText.textContent = "Puntos: 0";
 
     draw();
@@ -315,8 +340,9 @@ function startGame() {
     gameLoop = setInterval(step, 700);
 }
 
+// CICLO DEL JUEGO
 function step() {
-    if (!playing || ending) return;
+    if (!playing || recovering) return;
 
     if (lane === coinLane) {
         score += 10;
@@ -328,34 +354,74 @@ function step() {
     obstacleLane = Math.floor(Math.random() * 3);
 
     scoreText.textContent = "Puntos: " + score;
+
     draw();
 
     if (lane === obstacleLane) {
-        endGame();
+        startRescue();
     }
 }
 
-// Game Over después de 1.5 segundos
-function endGame() {
-    if (ending || !playing) return;
+// EMPIEZA LA SEGUNDA OPORTUNIDAD
+function startRescue() {
+    if (!playing || recovering) return;
 
-    ending = true;
-    playing = false;
+    recovering = true;
 
     clearInterval(gameLoop);
 
-    message.textContent = "💥 ¡CHOQUE!";
+    let secondsLeft = 3;
 
-    gameOverTimer = setTimeout(() => {
-        message.textContent = "GAME OVER";
-        nameBox.style.display = "block";
-        document.getElementById("playerName").focus();
-    }, 1500);
+    message.textContent = "⚠️ ¡ESQUIVA! " + secondsLeft;
+
+    countdownInterval = setInterval(() => {
+        secondsLeft--;
+
+        if (secondsLeft > 0 && recovering) {
+            message.textContent = "⚠️ ¡ESQUIVA! " + secondsLeft;
+        }
+    }, 1000);
+
+    // Si no escapa en 3 segundos, pierde
+    rescueTimeout = setTimeout(() => {
+        finishGame();
+    }, 3000);
 }
 
-// Guardar récords sin permitir superar a Emilio
+// SI ESCAPA, CONTINÚA LA PARTIDA
+function rescuePlayer() {
+    if (!recovering) return;
+
+    clearTimeout(rescueTimeout);
+    clearInterval(countdownInterval);
+
+    recovering = false;
+
+    message.textContent = "🔥 ¡TE SALVASTE!";
+
+    gameLoop = setInterval(step, 700);
+}
+
+// GAME OVER
+function finishGame() {
+    clearInterval(gameLoop);
+    clearInterval(countdownInterval);
+    clearTimeout(rescueTimeout);
+
+    playing = false;
+    recovering = false;
+
+    message.textContent = "☠️ GAME OVER";
+
+    nameBox.style.display = "block";
+
+    document.getElementById("playerName").focus();
+}
+
+// GUARDAR RÉCORD
 function saveRecord() {
     const nameInput = document.getElementById("playerName");
+
     const name = nameInput.value.trim().slice(0, 10);
 
     if (!name) {
@@ -363,8 +429,12 @@ function saveRecord() {
         return;
     }
 
-    if (name.toLowerCase() === "emilio nuñez".toLowerCase()) {
-        message.textContent = "Ese puesto ya tiene dueño 😎";
+    const normalizedName = name.normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+
+    if (normalizedName === "emilio nunez") {
+        message.textContent = "👑 ¡ESE PUESTO YA TIENE DUEÑO!";
         return;
     }
 
@@ -375,14 +445,20 @@ function saveRecord() {
         score: Math.min(score, 49999999)
     });
 
-    records.sort((a, b) => b.score - a.score);
+    const others = records.filter(record => {
+        const normalized = record.name.normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase();
+
+        return normalized !== "emilio nunez";
+    });
+
+    others.sort((a, b) => b.score - a.score);
 
     const topFive = [
         { name: "Emilio Nuñez", score: 50000000 },
-        ...records.filter(record => record.name !== "Emilio Nuñez")
-    ]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5);
+        ...others
+    ].slice(0, 5);
 
     storeRecords(topFive);
     renderRecords();
@@ -393,9 +469,10 @@ function saveRecord() {
     nameInput.value = "";
 }
 
-// Mostrar tabla al abrir el juego
+// CARGAR TABLA
 renderRecords();
 draw();
+
 </script>
 
 </body>
