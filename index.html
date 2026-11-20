@@ -30,6 +30,15 @@ h3 {
   color: #a8b8e8;
 }
 
+.panel {
+  max-width: 450px;
+  margin: 15px auto;
+  padding: 15px;
+  background: #111c38;
+  border: 1px solid #00bfff;
+  border-radius: 15px;
+}
+
 #game {
   display: flex;
   justify-content: center;
@@ -74,14 +83,71 @@ button:hover {
   background: #00bfff;
 }
 
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
 #message {
   color: #00eaff;
   font-weight: bold;
 }
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+th, td {
+  padding: 10px 5px;
+  border-bottom: 1px solid #34466d;
+}
+
+th {
+  color: #00eaff;
+}
+
+td {
+  color: white;
+}
+
+#recordModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #000c;
+  z-index: 10;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 350px;
+  background: #111c38;
+  border: 2px solid #00eaff;
+  border-radius: 18px;
+  padding: 25px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 2px solid #00bfff;
+  background: #080b19;
+  color: white;
+  font-size: 18px;
+  text-align: center;
+}
+
 footer {
   color: #8da5d5;
   margin-top: 30px;
+  font-size: 13px;
 }
 </style>
 </head>
@@ -91,7 +157,9 @@ footer {
 <h1>🚀 NEON ESCAPE</h1>
 <h3>EMILIONSTUDIOS</h3>
 
-<p>🏆 Puntos: <span id="score">0</span></p>
+<div class="panel">
+  <h2>🏆 Puntos: <span id="score">0</span></h2>
+</div>
 
 <div id="game">
   <div class="lane" id="l0"></div>
@@ -100,28 +168,126 @@ footer {
 </div>
 
 <button onclick="move(-1)">⬅️ IZQUIERDA</button>
-<button onclick="start()">▶ JUGAR</button>
+<button onclick="start()" id="startButton">▶ JUGAR</button>
 <button onclick="move(1)">DERECHA ➡️</button>
 
 <p id="message">¡Pulsa JUGAR para comenzar!</p>
-
 <p>Controles: ⬅️ ➡️ Flechas del teclado</p>
 
+<!-- TABLA DE RÉCORDS -->
+<div class="panel">
+  <h2>🏆 TOP 5 RÉCORDS</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Posición</th>
+        <th>Jugador</th>
+        <th>Puntos</th>
+      </tr>
+    </thead>
+    <tbody id="recordsTable"></tbody>
+  </table>
+</div>
+
+<!-- VENTANA PARA GUARDAR EL RÉCORD -->
+<div id="recordModal">
+  <div class="modalContent">
+    <h2>💥 ¡GAME OVER!</h2>
+    <h3>Tu puntuación: <span id="finalScore">0</span></h3>
+
+    <p>¡Escribe tu nombre para guardar tu récord!</p>
+
+    <input
+      type="text"
+      id="playerName"
+      maxlength="10"
+      placeholder="Tu nombre"
+      autocomplete="off"
+    >
+
+    <button onclick="saveRecord()">💾 GUARDAR RÉCORD</button>
+  </div>
+</div>
+
 <footer>
-  Creado por Emilio Nuñez · 2026
+  Creado por Emilio Nuñez · EmilionStudios · 2026
 </footer>
 
 <script>
+
+// CONFIGURACIÓN
 let player = 1;
 let obstacle = 0;
 let coin = 2;
 let score = 0;
 let playing = false;
-let timer;
+let timer = null;
 
+// CLAVE DE LOCALSTORAGE
+const STORAGE_KEY = "emilionstudios_neon_records";
+
+// CARGAR RÉCORDS
+function getRecords() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return Array.isArray(saved) ? saved : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+// GUARDAR RÉCORDS
+function storeRecords(records) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    return true;
+  } catch (error) {
+    alert("No se pudieron guardar los récords en este navegador.");
+    return false;
+  }
+}
+
+// MOSTRAR TABLA
+function renderRecords() {
+  const table = document.getElementById("recordsTable");
+  table.innerHTML = "";
+
+  const records = getRecords()
+    .filter(r =>
+      r &&
+      typeof r.name === "string" &&
+      Number.isFinite(r.score)
+    )
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
+
+  if (records.length === 0) {
+    table.innerHTML =
+      '<tr><td colspan="3">Todavía no hay récords. ¡Sé el primero!</td></tr>';
+    return;
+  }
+
+  records.forEach((record, index) => {
+    const row = document.createElement("tr");
+
+    const position = document.createElement("td");
+    const name = document.createElement("td");
+    const points = document.createElement("td");
+
+    position.textContent = ["🥇", "🥈", "🥉", "4", "5"][index];
+    name.textContent = record.name;
+    points.textContent = record.score;
+
+    row.append(position, name, points);
+    table.appendChild(row);
+  });
+}
+
+// DIBUJAR JUEGO
 function draw() {
   for (let i = 0; i < 3; i++) {
-    let lane = document.getElementById("l" + i);
+    const lane = document.getElementById("l" + i);
     lane.innerHTML = "";
 
     if (i === obstacle) {
@@ -129,7 +295,8 @@ function draw() {
     }
 
     if (i === coin) {
-      lane.innerHTML += '<div class="item" style="top:120px">🪙</div>';
+      lane.innerHTML +=
+        '<div class="item" style="top:120px">🪙</div>';
     }
 
     if (i === player) {
@@ -140,7 +307,7 @@ function draw() {
   document.getElementById("score").textContent = score;
 }
 
-// MOVIMIENTO DEL JUGADOR
+// MOVER JUGADOR
 function move(direction) {
   if (!playing) return;
 
@@ -156,7 +323,6 @@ function move(direction) {
 
 // CONTROLES DEL TECLADO
 document.addEventListener("keydown", function(event) {
-
   if (event.key === "ArrowLeft") {
     event.preventDefault();
     move(-1);
@@ -166,17 +332,15 @@ document.addEventListener("keydown", function(event) {
     event.preventDefault();
     move(1);
   }
-
 });
 
-// MOVIMIENTO DE OBSTÁCULOS
+// MOVIMIENTO DEL JUEGO
 function step() {
-  if (player === obstacle) {
-    gameOver();
-    return;
+  if (player === coin) {
+    score += 10;
+  } else {
+    score += 1;
   }
-
-  score += player === coin ? 10 : 1;
 
   obstacle = Math.floor(Math.random() * 3);
   coin = Math.floor(Math.random() * 3);
@@ -188,9 +352,11 @@ function step() {
   }
 }
 
-// INICIAR JUEGO
+// INICIAR
 function start() {
   clearInterval(timer);
+
+  document.getElementById("recordModal").style.display = "none";
 
   player = 1;
   obstacle = 0;
@@ -201,21 +367,67 @@ function start() {
   document.getElementById("message").textContent =
     "¡A jugar! Esquiva los obstáculos.";
 
+  document.getElementById("startButton").textContent = "↻ REINICIAR";
+
   draw();
 
   timer = setInterval(step, 850);
 }
 
-// FIN DEL JUEGO
+// PERDER
 function gameOver() {
   playing = false;
   clearInterval(timer);
 
   document.getElementById("message").textContent =
-    "💥 GAME OVER - Puntos: " + score;
+    "💥 ¡GAME OVER!";
+
+  document.getElementById("finalScore").textContent = score;
+  document.getElementById("playerName").value = "";
+
+  document.getElementById("recordModal").style.display = "flex";
+
+  document.getElementById("playerName").focus();
 }
 
+// GUARDAR NUEVO RÉCORD
+function saveRecord() {
+  const input = document.getElementById("playerName");
+  const name = input.value.trim().slice(0, 10);
+
+  if (!name) {
+    alert("¡Escribe tu nombre primero!");
+    input.focus();
+    return;
+  }
+
+  let records = getRecords();
+
+  records.push({
+    name: name,
+    score: score
+  });
+
+  records.sort((a, b) => b.score - a.score);
+  records = records.slice(0, 5);
+
+  if (storeRecords(records)) {
+    renderRecords();
+
+    document.getElementById("recordModal").style.display = "none";
+
+    document.getElementById("message").textContent =
+      "🏆 ¡RÉCORD GUARDADO!";
+
+    document.getElementById("startButton").textContent =
+      "▶ JUGAR OTRA VEZ";
+  }
+}
+
+// MOSTRAR RÉCORDS AL ABRIR
+renderRecords();
 draw();
+
 </script>
 
 </body>
