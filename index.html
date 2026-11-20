@@ -1,1 +1,162 @@
-index.html
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEON ESCAPE - EmilionStudios</title>
+<style>
+body {
+  background: #080b19;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+h1 {
+  color: #00eaff;
+  font-size: 40px;
+  text-shadow: 0 0 15px #00eaff;
+}
+#game {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 25px auto;
+}
+.lane {
+  width: 100px;
+  height: 300px;
+  background: #182342;
+  border: 2px solid #00bfff;
+  border-radius: 12px;
+  position: relative;
+  font-size: 35px;
+}
+.item {
+  position: absolute;
+  top: 45px;
+  left: 30px;
+}
+.ship {
+  position: absolute;
+  bottom: 15px;
+  left: 30px;
+}
+button {
+  background: #007eae;
+  color: white;
+  border: none;
+  padding: 13px;
+  border-radius: 10px;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+footer {
+  color: #8da5d5;
+  margin-top: 30px;
+}
+</style>
+</head>
+<body>
+
+<h1>🚀 NEON ESCAPE</h1>
+<h3>EmilionStudios</h3>
+
+<p>Puntos: <span id="score">0</span></p>
+
+<div id="game">
+  <div class="lane" id="l0"></div>
+  <div class="lane" id="l1"></div>
+  <div class="lane" id="l2"></div>
+</div>
+
+<button onclick="move(-1)">⬅️ Izquierda</button>
+<button onclick="start()">▶ JUGAR</button>
+<button onclick="move(1)">Derecha ➡️</button>
+
+<p id="message">¡Esquiva los obstáculos!</p>
+
+<footer>
+  Creado por Emilio Nuñez · 2026
+</footer>
+
+<script>
+let player = 1;
+let obstacle = 0;
+let coin = 2;
+let score = 0;
+let playing = false;
+let timer;
+
+function draw() {
+  for(let i=0;i<3;i++){
+    let lane = document.getElementById("l"+i);
+    lane.innerHTML = "";
+
+    if(i===obstacle){
+      lane.innerHTML += '<div class="item">🔺</div>';
+    }
+    if(i===coin){
+      lane.innerHTML += '<div class="item" style="top:120px">🪙</div>';
+    }
+    if(i===player){
+      lane.innerHTML += '<div class="ship">🚀</div>';
+    }
+  }
+  document.getElementById("score").textContent=score;
+}
+
+function move(direction){
+  if(!playing)return;
+  player=Math.max(0,Math.min(2,player+direction));
+  if(player===obstacle){
+    gameOver();
+    return;
+  }
+  draw();
+}
+
+function step(){
+  if(player===obstacle){
+    gameOver();
+    return;
+  }
+
+  score += player===coin ? 10 : 1;
+  obstacle=Math.floor(Math.random()*3);
+  coin=Math.floor(Math.random()*3);
+  draw();
+
+  if(player===obstacle)gameOver();
+}
+
+function start(){
+  clearInterval(timer);
+  player=1;
+  obstacle=0;
+  coin=2;
+  score=0;
+  playing=true;
+  document.getElementById("message").textContent="¡A jugar!";
+  draw();
+  timer=setInterval(step,850);
+}
+
+function gameOver(){
+  playing=false;
+  clearInterval(timer);
+  document.getElementById("message").textContent=
+    "💥 GAME OVER - Puntos: "+score;
+}
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowLeft")move(-1);
+  if(e.key==="ArrowRight")move(1);
+});
+
+draw();
+</script>
+
+</body>
+</html>
