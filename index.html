@@ -13,297 +13,609 @@
 
 body {
     margin: 0;
-    background: #080817;
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #18204a, #050510 65%);
     color: white;
     font-family: Arial, sans-serif;
     text-align: center;
+    overflow-x: hidden;
+}
+
+header {
+    padding: 25px 10px 10px;
 }
 
 h1 {
     color: #00f7ff;
-    text-shadow: 0 0 15px #00f7ff;
-    margin-top: 20px;
+    font-size: 42px;
+    text-shadow: 0 0 12px #00eaff, 0 0 25px #0066ff;
+    margin-bottom: 5px;
+}
+
+.studio {
+    color: #a7a7ff;
+    letter-spacing: 4px;
+    font-size: 12px;
+}
+
+.music-button {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 20;
+    padding: 11px 15px;
+    background: #15152e;
+    color: white;
+    border: 1px solid #00eaff;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 20px;
+    box-shadow: 0 0 12px #00eaff66;
 }
 
 #game {
-    width: 330px;
-    height: 470px;
+    width: 310px;
+    height: 440px;
     margin: 20px auto;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(#10102b, #171735);
-    border: 3px solid #00f7ff;
+    border: 2px solid #00eaff;
     border-radius: 15px;
-    box-shadow: 0 0 20px #00f7ff;
+    background: linear-gradient(#090d28, #11113b);
+    box-shadow: 0 0 25px #00eaff66;
 }
 
 .lane {
     position: absolute;
     top: 0;
     height: 100%;
-    width: 33.33%;
-    border-right: 2px dashed #34346b;
+    width: 1px;
+    background: #ffffff20;
 }
 
-.lane:nth-child(1) { left: 0; }
-.lane:nth-child(2) { left: 33.33%; }
-.lane:nth-child(3) {
-    left: 66.66%;
-    border: none;
-}
+#lane1 { left: 33.33%; }
+#lane2 { left: 66.66%; }
 
 .player, .obstacle, .coin {
     position: absolute;
-    width: 55px;
-    height: 55px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px;
-    border-radius: 12px;
+    font-size: 34px;
+    width: 33.33%;
+    text-align: center;
+    transition: left 0.12s;
 }
 
 .player {
     bottom: 25px;
-    background: #00d9ff;
-    box-shadow: 0 0 18px #00d9ff;
-    transition: left 0.12s;
+    z-index: 3;
 }
 
 .obstacle {
-    top: 45px;
-    background: #ff245c;
-    box-shadow: 0 0 18px #ff245c;
+    top: 80px;
+    filter: drop-shadow(0 0 8px #ff315b);
 }
 
 .coin {
-    top: 155px;
-    background: #ffd500;
-    box-shadow: 0 0 18px #ffd500;
-    border-radius: 50%;
+    top: 220px;
+    filter: drop-shadow(0 0 8px gold);
 }
 
 #score {
     font-size: 22px;
-    color: #ffe600;
-    margin: 10px;
+    color: #00f7ff;
+    margin: 12px;
 }
 
 button {
-    background: #00d9ff;
-    color: #080817;
-    border: none;
-    border-radius: 10px;
+    font-family: inherit;
+}
+
+.controls button, .main-button {
+    background: #171737;
+    border: 1px solid #00eaff;
+    color: white;
     padding: 12px 22px;
-    font-size: 16px;
-    font-weight: bold;
+    margin: 5px;
+    border-radius: 10px;
     cursor: pointer;
-    margin: 6px;
+    font-size: 17px;
+    box-shadow: 0 0 10px #00eaff44;
 }
 
 button:hover {
-    background: #72f4ff;
+    background: #26336b;
+}
+
+.main-button {
+    background: #006b83;
+    font-weight: bold;
+    padding: 14px 35px;
 }
 
 #message {
-    font-size: 27px;
+    min-height: 28px;
+    color: #ffe66d;
     font-weight: bold;
-    color: #ff245c;
-    text-shadow: 0 0 15px #ff245c;
-    margin: 12px;
-    min-height: 36px;
+    font-size: 18px;
 }
 
-#records {
+#menu {
     margin: 20px auto;
-    width: 320px;
-    background: #15152d;
-    border: 1px solid #00d9ff;
-    border-radius: 12px;
-    padding: 12px;
+    max-width: 330px;
+    padding: 15px;
 }
 
-#records h2 {
-    color: #00f7ff;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-td, th {
-    padding: 8px;
-    border-bottom: 1px solid #34346b;
-}
-
-#nameBox {
+#gameOver {
     display: none;
-    margin: 15px auto;
+    margin: 20px auto;
 }
 
-input {
-    padding: 10px;
+#nameInput {
+    padding: 11px;
+    width: 190px;
     border-radius: 8px;
-    border: 2px solid #00d9ff;
+    border: 1px solid #00eaff;
     background: #10102b;
     color: white;
-    width: 160px;
-    font-size: 16px;
+    text-align: center;
+}
+
+.records {
+    width: 310px;
+    margin: 25px auto;
+    padding: 15px;
+    border: 1px solid #765cff;
+    border-radius: 12px;
+    background: #111127;
+}
+
+.records h2 {
+    color: #c4aaff;
+}
+
+.record {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px;
+    border-bottom: 1px solid #ffffff18;
+}
+
+footer {
+    color: #7777a9;
+    padding: 25px;
+    font-size: 12px;
+}
+
+@media (max-width: 360px) {
+    #game, .records {
+        width: 290px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<h1>🚀 NEON ESCAPE</h1>
+<button class="music-button" id="musicButton" onclick="toggleMusic()">
+🔊
+</button>
 
-<div id="score">Puntos: 0</div>
+<header>
+    <h1>NEON ESCAPE</h1>
+    <div class="studio">EMILIONSTUDIOS</div>
+</header>
+
+<div id="menu">
+    <h2>🌌 Bienvenido</h2>
+    <p>Esquiva obstáculos, recoge monedas y consigue la mayor puntuación.</p>
+    <button class="main-button" onclick="startGame()">▶ JUGAR</button>
+</div>
+
+<div id="score">Puntuación: 0</div>
 
 <div id="game">
-    <div class="lane"></div>
-    <div class="lane"></div>
-    <div class="lane"></div>
-
-    <div id="player" class="player">🚀</div>
-    <div id="obstacle" class="obstacle">💥</div>
-    <div id="coin" class="coin">🪙</div>
+    <div class="lane" id="lane1"></div>
+    <div class="lane" id="lane2"></div>
+    <div class="player" id="player">🚀</div>
+    <div class="obstacle" id="obstacle">💥</div>
+    <div class="coin" id="coin">🪙</div>
 </div>
 
-<div id="message">¡Prepárate!</div>
+<div id="message"></div>
 
-<button onclick="startGame()">JUGAR</button>
-<button onclick="move(-1)">⬅️</button>
-<button onclick="move(1)">➡️</button>
-
-<div id="nameBox">
-    <p>¡Escribe tu nombre para guardar tu récord!</p>
-    <input id="playerName" maxlength="10" placeholder="Tu nombre">
-    <button onclick="saveRecord()">GUARDAR</button>
+<div class="controls">
+    <button onclick="move(-1)">⬅️</button>
+    <button onclick="move(1)">➡️</button>
 </div>
 
-<div id="records">
-    <h2>🏆 MEJORES 5</h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Puntos</th>
-            </tr>
-        </thead>
-
-        <tbody id="recordList"></tbody>
-    </table>
+<div id="gameOver">
+    <h2>💥 GAME OVER</h2>
+    <p id="finalScore"></p>
+    <input id="nameInput" maxlength="15" placeholder="Tu nombre">
+    <br><br>
+    <button class="main-button" onclick="saveRecord()">GUARDAR RÉCORD</button>
+    <br>
+    <button onclick="startGame()">🔄 VOLVER A JUGAR</button>
 </div>
+
+<div class="records">
+    <h2>🏆 TOP 5 RÉCORDS</h2>
+    <div id="recordList"></div>
+</div>
+
+<footer>
+    NEON ESCAPE © 2026 · EMILIONSTUDIOS
+</footer>
 
 <script>
+// ============================
+// 🎵 SISTEMA DE MÚSICA
+// ============================
+
+let audioContext = null;
+let musicEnabled = true;
+let musicTimer = null;
+let musicStep = 0;
+let musicMode = "menu";
+
+function initAudio() {
+    if (!audioContext) {
+        const AudioContextClass =
+            window.AudioContext || window.webkitAudioContext;
+
+        if (AudioContextClass) {
+            audioContext = new AudioContextClass();
+        }
+    }
+
+    if (audioContext && audioContext.state === "suspended") {
+        audioContext.resume();
+    }
+}
+
+function playNote(frequency, duration, type = "sine", volume = 0.035) {
+    if (!audioContext || !musicEnabled) return;
+
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.type = type;
+    oscillator.frequency.value = frequency;
+
+    gain.gain.setValueAtTime(volume, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioContext.currentTime + duration
+    );
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + duration);
+}
+
+const calmNotes = [261.63, 329.63, 392, 329.63, 293.66, 349.23, 392, 349.23];
+const arcadeNotes = [392, 523.25, 659.25, 523.25, 440, 587.33, 698.46, 587.33];
+
+function musicTick() {
+    if (!musicEnabled) return;
+
+    if (musicMode === "menu") {
+        playNote(calmNotes[musicStep % calmNotes.length], 1.2, "sine", 0.025);
+        if (musicStep % 4 === 0) {
+            playNote(130.81, 1.5, "triangle", 0.018);
+        }
+    } else {
+        playNote(arcadeNotes[musicStep % arcadeNotes.length], 0.28, "square", 0.018);
+
+        if (musicStep % 2 === 0) {
+            playNote(130.81, 0.15, "triangle", 0.025);
+        }
+    }
+
+    musicStep++;
+}
+
+function setMusicMode(mode) {
+    musicMode = mode;
+    musicStep = 0;
+
+    if (musicTimer) {
+        clearInterval(musicTimer);
+    }
+
+    if (musicEnabled) {
+        musicTick();
+        musicTimer = setInterval(
+            musicTick,
+            mode === "menu" ? 850 : 300
+        );
+    }
+}
+
+function toggleMusic() {
+    musicEnabled = !musicEnabled;
+
+    document.getElementById("musicButton").textContent =
+        musicEnabled ? "🔊" : "🔇";
+
+    if (musicEnabled) {
+        initAudio();
+        setMusicMode(musicMode);
+    } else {
+        if (musicTimer) clearInterval(musicTimer);
+        musicTimer = null;
+    }
+}
+
+// ============================
+// 🚀 SISTEMA DEL JUEGO
+// ============================
+
+let playerLane = 1;
+let obstacleLane = 0;
+let coinLane = 2;
+let score = 0;
+let gameInterval = null;
+let rescueTimeout = null;
+let countdownInterval = null;
+let rescueActive = false;
+let playing = false;
+
 const player = document.getElementById("player");
 const obstacle = document.getElementById("obstacle");
 const coin = document.getElementById("coin");
-const scoreText = document.getElementById("score");
-const message = document.getElementById("message");
-const nameBox = document.getElementById("nameBox");
 
-let lane = 1;
-let obstacleLane = 0;
-let coinLane = 2;
-
-let score = 0;
-let playing = false;
-let recovering = false;
-
-let gameLoop;
-let rescueTimeout;
-let countdownInterval;
-
-const positions = [27, 137, 247];
-
-function draw() {
-    player.style.left = positions[lane] + "px";
-    obstacle.style.left = positions[obstacleLane] + "px";
-    coin.style.left = positions[coinLane] + "px";
+function positionElement(element, lane) {
+    element.style.left = (lane * 33.333) + "%";
 }
 
-// TOP 1 PROTEGIDO
+function updatePositions() {
+    positionElement(player, playerLane);
+    positionElement(obstacle, obstacleLane);
+    positionElement(coin, coinLane);
+}
+
+function updateScore() {
+    document.getElementById("score").textContent =
+        "Puntuación: " + score;
+}
+
+function randomLane() {
+    return Math.floor(Math.random() * 3);
+}
+
+function startGame() {
+    initAudio();
+    setMusicMode("game");
+
+    clearInterval(gameInterval);
+    clearTimeout(rescueTimeout);
+    clearInterval(countdownInterval);
+
+    rescueActive = false;
+    playing = true;
+
+    score = 0;
+    playerLane = 1;
+    obstacleLane = randomLane();
+    coinLane = randomLane();
+
+    if (coinLane === obstacleLane) {
+        coinLane = (coinLane + 1) % 3;
+    }
+
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("gameOver").style.display = "none";
+    document.getElementById("message").textContent = "";
+
+    updatePositions();
+    updateScore();
+
+    gameInterval = setInterval(gameTick, 700);
+}
+
+function move(direction) {
+    if (!playing) return;
+
+    playerLane += direction;
+
+    if (playerLane < 0) playerLane = 0;
+    if (playerLane > 2) playerLane = 2;
+
+    updatePositions();
+
+    if (rescueActive && playerLane !== obstacleLane) {
+        rescuePlayer();
+    }
+}
+
+function gameTick() {
+    if (!playing || rescueActive) return;
+
+    score += 1;
+
+    if (playerLane === coinLane) {
+        score += 9;
+        coinLane = randomLane();
+    }
+
+    updateScore();
+
+    obstacleLane = randomLane();
+
+    if (Math.random() < 0.65) {
+        coinLane = randomLane();
+    }
+
+    if (coinLane === obstacleLane) {
+        coinLane = (coinLane + 1) % 3;
+    }
+
+    updatePositions();
+
+    if (playerLane === obstacleLane) {
+        startRescue();
+    }
+}
+
+// ============================
+// ⚠️ SEGUNDA OPORTUNIDAD
+// ============================
+
+function startRescue() {
+    rescueActive = true;
+
+    clearInterval(gameInterval);
+
+    let seconds = 2;
+
+    document.getElementById("message").textContent =
+        "⚠️ ¡ESQUIVA! " + seconds;
+
+    countdownInterval = setInterval(() => {
+        seconds--;
+
+        if (seconds > 0) {
+            document.getElementById("message").textContent =
+                "⚠️ ¡ESQUIVA! " + seconds;
+        }
+    }, 1000);
+
+    rescueTimeout = setTimeout(() => {
+        if (rescueActive) {
+            finishGame();
+        }
+    }, 2000);
+}
+
+function rescuePlayer() {
+    rescueActive = false;
+
+    clearTimeout(rescueTimeout);
+    clearInterval(countdownInterval);
+
+    document.getElementById("message").textContent =
+        "✨ ¡TE SALVASTE!";
+
+    gameInterval = setInterval(gameTick, 700);
+}
+
+// ============================
+// 💥 FIN DE PARTIDA
+// ============================
+
+function finishGame() {
+    playing = false;
+    rescueActive = false;
+
+    clearInterval(gameInterval);
+    clearTimeout(rescueTimeout);
+    clearInterval(countdownInterval);
+
+    document.getElementById("message").textContent = "";
+    document.getElementById("finalScore").textContent =
+        "Tu puntuación: " + score;
+
+    document.getElementById("gameOver").style.display = "block";
+
+    setMusicMode("menu");
+}
+
+// ============================
+// 🏆 RÉCORDS
+// ============================
+
+const RECORD_KEY = "emilionionstudios_neon_records";
+
 function getRecords() {
-    const records = JSON.parse(
-        localStorage.getItem("emilionstudios_neon_records") || "[]"
+    let records = [];
+
+    try {
+        records = JSON.parse(localStorage.getItem(RECORD_KEY)) || [];
+    } catch (error) {
+        records = [];
+    }
+
+    records = records.filter(record =>
+        record &&
+        typeof record.name === "string" &&
+        Number.isFinite(Number(record.score)) &&
+        record.name.toLowerCase() !== "emilio nuñez"
     );
 
-    const others = records.filter(record =>
-        record.name.normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase() !== "emilio nunez"
-    );
+    records.push({
+        name: "Emilio Nuñez",
+        score: 50000000
+    });
 
-    others.sort((a, b) => b.score - a.score);
+    records.sort((a, b) => b.score - a.score);
 
-    return [
-        { name: "Emilio Nuñez", score: 50000000 },
-        ...others
-    ].slice(0, 5);
+    return records.slice(0, 5);
 }
 
-function storeRecords(records) {
-    localStorage.setItem(
-        "emilionstudios_neon_records",
-        JSON.stringify(records)
-    );
-}
-
-function renderRecords() {
+function showRecords() {
     const records = getRecords();
     const list = document.getElementById("recordList");
 
     list.innerHTML = "";
 
     records.forEach((record, index) => {
-        const row = document.createElement("tr");
+        const row = document.createElement("div");
+        row.className = "record";
 
-        const nameCell = document.createElement("td");
-        const scoreCell = document.createElement("td");
+        const name = document.createElement("span");
+        name.textContent = (index + 1) + ". " + record.name;
 
-        nameCell.textContent =
-            (index === 0 ? "👑 " : "") + record.name;
+        const points = document.createElement("span");
+        points.textContent = Number(record.score).toLocaleString("es-DO");
 
-        scoreCell.textContent =
-            record.score.toLocaleString("en-US");
-
-        row.appendChild(nameCell);
-        row.appendChild(scoreCell);
-
+        row.appendChild(name);
+        row.appendChild(points);
         list.appendChild(row);
     });
-
-    storeRecords(records);
 }
 
-// MOVER JUGADOR
-function move(direction) {
-    if (!playing) return;
+function saveRecord() {
+    const nameInput = document.getElementById("nameInput");
+    let name = nameInput.value.trim();
 
-    lane += direction;
+    if (!name) {
+        name = "Jugador";
+    }
 
-    if (lane < 0) lane = 0;
-    if (lane > 2) lane = 2;
-
-    draw();
-
-    if (recovering) {
-        if (lane !== obstacleLane) {
-            rescuePlayer();
-        }
+    if (name.toLowerCase() === "emilio nuñez") {
+        alert("Ese puesto está reservado 😎");
         return;
     }
 
-    if (lane === obstacleLane) {
-        startRescue();
-    }
+    const records = getRecords();
+
+    records.push({
+        name: name.substring(0, 15),
+        score: Math.min(score, 49999999)
+    });
+
+    records.sort((a, b) => b.score - a.score);
+
+    localStorage.setItem(
+        RECORD_KEY,
+        JSON.stringify(records.slice(0, 5))
+    );
+
+    nameInput.value = "";
+    document.getElementById("gameOver").style.display = "none";
+    document.getElementById("menu").style.display = "block";
+
+    showRecords();
+    setMusicMode("menu");
 }
 
-// CONTROLES DEL TECLADO
-document.addEventListener("keydown", function(event) {
+// ============================
+// ⌨️ CONTROLES DEL TECLADO
+// ============================
+
+document.addEventListener("keydown", event => {
     if (event.key === "ArrowLeft") {
         event.preventDefault();
         move(-1);
@@ -315,160 +627,14 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
-// INICIAR PARTIDA
-function startGame() {
-    clearInterval(gameLoop);
-    clearInterval(countdownInterval);
-    clearTimeout(rescueTimeout);
+// ============================
+// 🌌 INICIO
+// ============================
 
-    lane = 1;
-    obstacleLane = Math.floor(Math.random() * 3);
-    coinLane = Math.floor(Math.random() * 3);
-
-    score = 0;
-    playing = true;
-    recovering = false;
-
-    nameBox.style.display = "none";
-    message.textContent = "¡CORRE!";
-    scoreText.textContent = "Puntos: 0";
-
-    draw();
-
-    gameLoop = setInterval(step, 700);
-}
-
-// CICLO DEL JUEGO
-function step() {
-    if (!playing || recovering) return;
-
-    if (lane === coinLane) {
-        score += 10;
-        coinLane = Math.floor(Math.random() * 3);
-    } else {
-        score += 1;
-    }
-
-    obstacleLane = Math.floor(Math.random() * 3);
-
-    scoreText.textContent = "Puntos: " + score;
-
-    draw();
-
-    if (lane === obstacleLane) {
-        startRescue();
-    }
-}
-
-// SEGUNDA OPORTUNIDAD: 2 SEGUNDOS
-function startRescue() {
-    if (!playing || recovering) return;
-
-    recovering = true;
-
-    clearInterval(gameLoop);
-
-    let secondsLeft = 2;
-
-    message.textContent = "⚠️ ¡ESQUIVA! " + secondsLeft;
-
-    countdownInterval = setInterval(() => {
-        secondsLeft--;
-
-        if (secondsLeft > 0 && recovering) {
-            message.textContent = "⚠️ ¡ESQUIVA! " + secondsLeft;
-        }
-    }, 1000);
-
-    rescueTimeout = setTimeout(() => {
-        finishGame();
-    }, 2000);
-}
-
-// SI ESCAPA, CONTINÚA LA PARTIDA
-function rescuePlayer() {
-    if (!recovering) return;
-
-    clearTimeout(rescueTimeout);
-    clearInterval(countdownInterval);
-
-    recovering = false;
-
-    message.textContent = "🔥 ¡TE SALVASTE!";
-
-    gameLoop = setInterval(step, 700);
-}
-
-// GAME OVER
-function finishGame() {
-    clearInterval(gameLoop);
-    clearInterval(countdownInterval);
-    clearTimeout(rescueTimeout);
-
-    playing = false;
-    recovering = false;
-
-    message.textContent = "☠️ GAME OVER";
-
-    nameBox.style.display = "block";
-
-    document.getElementById("playerName").focus();
-}
-
-// GUARDAR RÉCORD
-function saveRecord() {
-    const nameInput = document.getElementById("playerName");
-
-    const name = nameInput.value.trim().slice(0, 10);
-
-    if (!name) {
-        nameInput.focus();
-        return;
-    }
-
-    const normalizedName = name.normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase();
-
-    if (normalizedName === "emilio nunez") {
-        message.textContent = "👑 ¡ESE PUESTO YA TIENE DUEÑO!";
-        return;
-    }
-
-    const records = getRecords();
-
-    records.push({
-        name: name,
-        score: Math.min(score, 49999999)
-    });
-
-    const others = records.filter(record => {
-        const normalized = record.name.normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase();
-
-        return normalized !== "emilio nunez";
-    });
-
-    others.sort((a, b) => b.score - a.score);
-
-    const topFive = [
-        { name: "Emilio Nuñez", score: 50000000 },
-        ...others
-    ].slice(0, 5);
-
-    storeRecords(topFive);
-    renderRecords();
-
-    nameBox.style.display = "none";
-    message.textContent = "🏆 ¡BUEN JUEGO!";
-
-    nameInput.value = "";
-}
-
-// CARGAR TABLA
-renderRecords();
-draw();
+showRecords();
+updatePositions();
+updateScore();
+setMusicMode("menu");
 
 </script>
 
