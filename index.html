@@ -216,10 +216,22 @@ function draw() {
     coin.style.left = positions[coinLane] + "px";
 }
 
+// Récords guardados
 function getRecords() {
-    return JSON.parse(
+    const records = JSON.parse(
         localStorage.getItem("emilionstudios_neon_records") || "[]"
     );
+
+    const others = records.filter(
+        record => record.name !== "Emilio Nuñez"
+    );
+
+    return [
+        { name: "Emilio Nuñez", score: 50000000 },
+        ...others
+    ]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
 }
 
 function storeRecords(records) {
@@ -235,19 +247,23 @@ function renderRecords() {
 
     list.innerHTML = "";
 
-    records.slice(0, 5).forEach(record => {
+    records.forEach((record, index) => {
         const row = document.createElement("tr");
 
         const nameCell = document.createElement("td");
         const scoreCell = document.createElement("td");
 
-        nameCell.textContent = record.name;
-        scoreCell.textContent = record.score;
+        nameCell.textContent =
+            (index === 0 ? "👑 " : "") + record.name;
+
+        scoreCell.textContent = record.score.toLocaleString("en-US");
 
         row.appendChild(nameCell);
         row.appendChild(scoreCell);
         list.appendChild(row);
     });
+
+    storeRecords(records);
 }
 
 function move(direction) {
@@ -265,12 +281,15 @@ function move(direction) {
     }
 }
 
+// Controles del teclado
 document.addEventListener("keydown", function(event) {
     if (event.key === "ArrowLeft") {
+        event.preventDefault();
         move(-1);
     }
 
     if (event.key === "ArrowRight") {
+        event.preventDefault();
         move(1);
     }
 });
@@ -316,6 +335,7 @@ function step() {
     }
 }
 
+// Game Over después de 1.5 segundos
 function endGame() {
     if (ending || !playing) return;
 
@@ -326,7 +346,6 @@ function endGame() {
 
     message.textContent = "💥 ¡CHOQUE!";
 
-    // Esperar exactamente 1.5 segundos antes de GAME OVER
     gameOverTimer = setTimeout(() => {
         message.textContent = "GAME OVER";
         nameBox.style.display = "block";
@@ -334,6 +353,7 @@ function endGame() {
     }, 1500);
 }
 
+// Guardar récords sin permitir superar a Emilio
 function saveRecord() {
     const nameInput = document.getElementById("playerName");
     const name = nameInput.value.trim().slice(0, 10);
@@ -343,17 +363,28 @@ function saveRecord() {
         return;
     }
 
+    if (name.toLowerCase() === "emilio nuñez".toLowerCase()) {
+        message.textContent = "Ese puesto ya tiene dueño 😎";
+        return;
+    }
+
     const records = getRecords();
 
     records.push({
         name: name,
-        score: score
+        score: Math.min(score, 49999999)
     });
 
     records.sort((a, b) => b.score - a.score);
 
-    storeRecords(records.slice(0, 5));
+    const topFive = [
+        { name: "Emilio Nuñez", score: 50000000 },
+        ...records.filter(record => record.name !== "Emilio Nuñez")
+    ]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
 
+    storeRecords(topFive);
     renderRecords();
 
     nameBox.style.display = "none";
@@ -362,6 +393,7 @@ function saveRecord() {
     nameInput.value = "";
 }
 
+// Mostrar tabla al abrir el juego
 renderRecords();
 draw();
 </script>
