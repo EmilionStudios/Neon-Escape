@@ -290,7 +290,6 @@ function move(direction) {
 
     draw();
 
-    // Si está en peligro, puede escapar
     if (recovering) {
         if (lane !== obstacleLane) {
             rescuePlayer();
@@ -298,7 +297,6 @@ function move(direction) {
         return;
     }
 
-    // Si entra en el carril del obstáculo, comienza el peligro
     if (lane === obstacleLane) {
         startRescue();
     }
@@ -362,7 +360,7 @@ function step() {
     }
 }
 
-// EMPIEZA LA SEGUNDA OPORTUNIDAD
+// SEGUNDA OPORTUNIDAD: 2 SEGUNDOS
 function startRescue() {
     if (!playing || recovering) return;
 
@@ -370,7 +368,7 @@ function startRescue() {
 
     clearInterval(gameLoop);
 
-    let secondsLeft = 3;
+    let secondsLeft = 2;
 
     message.textContent = "⚠️ ¡ESQUIVA! " + secondsLeft;
 
@@ -382,10 +380,9 @@ function startRescue() {
         }
     }, 1000);
 
-    // Si no escapa en 3 segundos, pierde
     rescueTimeout = setTimeout(() => {
         finishGame();
-    }, 3000);
+    }, 2000);
 }
 
 // SI ESCAPA, CONTINÚA LA PARTIDA
