@@ -8,146 +8,145 @@
 
 <style>
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  background: radial-gradient(circle, #18244b, #080b19);
-  color: white;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  margin: 0;
-  padding: 20px;
+    margin: 0;
+    background: #080817;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
 
 h1 {
-  color: #00eaff;
-  font-size: 38px;
-  text-shadow: 0 0 15px #00eaff;
-}
-
-h3 {
-  color: #a8b8e8;
-}
-
-.panel {
-  max-width: 450px;
-  margin: 15px auto;
-  padding: 15px;
-  background: #111c38;
-  border: 1px solid #00bfff;
-  border-radius: 15px;
+    color: #00f7ff;
+    text-shadow: 0 0 15px #00f7ff;
+    margin-top: 20px;
 }
 
 #game {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 25px auto;
+    width: 330px;
+    height: 470px;
+    margin: 20px auto;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(#10102b, #171735);
+    border: 3px solid #00f7ff;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #00f7ff;
 }
 
 .lane {
-  width: 100px;
-  height: 320px;
-  background: #182342;
-  border: 2px solid #00bfff;
-  border-radius: 12px;
-  position: relative;
-  font-size: 35px;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 33.33%;
+    border-right: 2px dashed #34346b;
 }
 
-.item {
-  position: absolute;
-  top: 45px;
-  left: 30px;
+.lane:nth-child(1) { left: 0; }
+.lane:nth-child(2) { left: 33.33%; }
+.lane:nth-child(3) { left: 66.66%; border: none; }
+
+.player, .obstacle, .coin {
+    position: absolute;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    border-radius: 12px;
 }
 
-.ship {
-  position: absolute;
-  bottom: 15px;
-  left: 30px;
+.player {
+    bottom: 25px;
+    background: #00d9ff;
+    box-shadow: 0 0 18px #00d9ff;
+    transition: left 0.12s;
+}
+
+.obstacle {
+    top: 45px;
+    background: #ff245c;
+    box-shadow: 0 0 18px #ff245c;
+}
+
+.coin {
+    top: 155px;
+    background: #ffd500;
+    box-shadow: 0 0 18px #ffd500;
+    border-radius: 50%;
+}
+
+#score {
+    font-size: 22px;
+    color: #ffe600;
+    margin: 10px;
 }
 
 button {
-  background: #007eae;
-  color: white;
-  border: none;
-  padding: 13px 18px;
-  border-radius: 10px;
-  margin: 5px;
-  font-size: 16px;
-  cursor: pointer;
+    background: #00d9ff;
+    color: #080817;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 6px;
 }
 
 button:hover {
-  background: #00bfff;
-}
-
-button:disabled {
-  opacity: .5;
-  cursor: not-allowed;
+    background: #72f4ff;
 }
 
 #message {
-  color: #00eaff;
-  font-weight: bold;
+    font-size: 30px;
+    font-weight: bold;
+    color: #ff245c;
+    text-shadow: 0 0 15px #ff245c;
+    margin: 12px;
+    min-height: 36px;
+}
+
+#records {
+    margin: 20px auto;
+    width: 320px;
+    background: #15152d;
+    border: 1px solid #00d9ff;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+#records h2 {
+    color: #00f7ff;
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 12px;
+    width: 100%;
+    border-collapse: collapse;
 }
 
-th, td {
-  padding: 10px 5px;
-  border-bottom: 1px solid #34466d;
+td, th {
+    padding: 8px;
+    border-bottom: 1px solid #34346b;
 }
 
-th {
-  color: #00eaff;
-}
-
-td {
-  color: white;
-}
-
-#recordModal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: #000c;
-  z-index: 10;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.modalContent {
-  width: 100%;
-  max-width: 350px;
-  background: #111c38;
-  border: 2px solid #00eaff;
-  border-radius: 18px;
-  padding: 25px;
+#nameBox {
+    display: none;
+    margin: 15px auto;
 }
 
 input {
-  width: 100%;
-  padding: 12px;
-  margin: 12px 0;
-  border-radius: 8px;
-  border: 2px solid #00bfff;
-  background: #080b19;
-  color: white;
-  font-size: 18px;
-  text-align: center;
-}
-
-footer {
-  color: #8da5d5;
-  margin-top: 30px;
-  font-size: 13px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid #00d9ff;
+    background: #10102b;
+    color: white;
+    width: 160px;
+    font-size: 16px;
 }
 </style>
 </head>
@@ -155,279 +154,216 @@ footer {
 <body>
 
 <h1>🚀 NEON ESCAPE</h1>
-<h3>EMILIONSTUDIOS</h3>
-
-<div class="panel">
-  <h2>🏆 Puntos: <span id="score">0</span></h2>
-</div>
+<div id="score">Puntos: 0</div>
 
 <div id="game">
-  <div class="lane" id="l0"></div>
-  <div class="lane" id="l1"></div>
-  <div class="lane" id="l2"></div>
+    <div class="lane"></div>
+    <div class="lane"></div>
+    <div class="lane"></div>
+
+    <div id="player" class="player">🚀</div>
+    <div id="obstacle" class="obstacle">💥</div>
+    <div id="coin" class="coin">🪙</div>
 </div>
 
-<button onclick="move(-1)">⬅️ IZQUIERDA</button>
-<button onclick="start()" id="startButton">▶ JUGAR</button>
-<button onclick="move(1)">DERECHA ➡️</button>
+<div id="message">¡Prepárate!</div>
 
-<p id="message">¡Pulsa JUGAR para comenzar!</p>
-<p>Controles: ⬅️ ➡️ Flechas del teclado</p>
+<button onclick="startGame()">JUGAR</button>
+<button onclick="move(-1)">⬅️</button>
+<button onclick="move(1)">➡️</button>
 
-<!-- TABLA DE RÉCORDS -->
-<div class="panel">
-  <h2>🏆 TOP 5 RÉCORDS</h2>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Posición</th>
-        <th>Jugador</th>
-        <th>Puntos</th>
-      </tr>
-    </thead>
-    <tbody id="recordsTable"></tbody>
-  </table>
-</div>
-
-<!-- VENTANA PARA GUARDAR EL RÉCORD -->
-<div id="recordModal">
-  <div class="modalContent">
-    <h2>💥 ¡GAME OVER!</h2>
-    <h3>Tu puntuación: <span id="finalScore">0</span></h3>
-
+<div id="nameBox">
     <p>¡Escribe tu nombre para guardar tu récord!</p>
-
-    <input
-      type="text"
-      id="playerName"
-      maxlength="10"
-      placeholder="Tu nombre"
-      autocomplete="off"
-    >
-
-    <button onclick="saveRecord()">💾 GUARDAR RÉCORD</button>
-  </div>
+    <input id="playerName" maxlength="10" placeholder="Tu nombre">
+    <button onclick="saveRecord()">GUARDAR</button>
 </div>
 
-<footer>
-  Creado por Emilio Nuñez · EmilionStudios · 2026
-</footer>
+<div id="records">
+    <h2>🏆 MEJORES 5</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Puntos</th>
+            </tr>
+        </thead>
+        <tbody id="recordList"></tbody>
+    </table>
+</div>
 
 <script>
+const player = document.getElementById("player");
+const obstacle = document.getElementById("obstacle");
+const coin = document.getElementById("coin");
+const scoreText = document.getElementById("score");
+const message = document.getElementById("message");
+const nameBox = document.getElementById("nameBox");
 
-// CONFIGURACIÓN
-let player = 1;
-let obstacle = 0;
-let coin = 2;
+let lane = 1;
+let obstacleLane = 0;
+let coinLane = 2;
 let score = 0;
 let playing = false;
-let timer = null;
+let gameLoop;
+let gameOverTimer;
+let ending = false;
 
-// CLAVE DE LOCALSTORAGE
-const STORAGE_KEY = "emilionstudios_neon_records";
+const positions = [27, 137, 247];
 
-// CARGAR RÉCORDS
-function getRecords() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return Array.isArray(saved) ? saved : [];
-  } catch (error) {
-    return [];
-  }
-}
-
-// GUARDAR RÉCORDS
-function storeRecords(records) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-    return true;
-  } catch (error) {
-    alert("No se pudieron guardar los récords en este navegador.");
-    return false;
-  }
-}
-
-// MOSTRAR TABLA
-function renderRecords() {
-  const table = document.getElementById("recordsTable");
-  table.innerHTML = "";
-
-  const records = getRecords()
-    .filter(r =>
-      r &&
-      typeof r.name === "string" &&
-      Number.isFinite(r.score)
-    )
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5);
-
-  if (records.length === 0) {
-    table.innerHTML =
-      '<tr><td colspan="3">Todavía no hay récords. ¡Sé el primero!</td></tr>';
-    return;
-  }
-
-  records.forEach((record, index) => {
-    const row = document.createElement("tr");
-
-    const position = document.createElement("td");
-    const name = document.createElement("td");
-    const points = document.createElement("td");
-
-    position.textContent = ["🥇", "🥈", "🥉", "4", "5"][index];
-    name.textContent = record.name;
-    points.textContent = record.score;
-
-    row.append(position, name, points);
-    table.appendChild(row);
-  });
-}
-
-// DIBUJAR JUEGO
 function draw() {
-  for (let i = 0; i < 3; i++) {
-    const lane = document.getElementById("l" + i);
-    lane.innerHTML = "";
-
-    if (i === obstacle) {
-      lane.innerHTML += '<div class="item">🔺</div>';
-    }
-
-    if (i === coin) {
-      lane.innerHTML +=
-        '<div class="item" style="top:120px">🪙</div>';
-    }
-
-    if (i === player) {
-      lane.innerHTML += '<div class="ship">🚀</div>';
-    }
-  }
-
-  document.getElementById("score").textContent = score;
+    player.style.left = positions[lane] + "px";
+    obstacle.style.left = positions[obstacleLane] + "px";
+    coin.style.left = positions[coinLane] + "px";
 }
 
-// MOVER JUGADOR
+function getRecords() {
+    return JSON.parse(
+        localStorage.getItem("emilionstudios_neon_records") || "[]"
+    );
+}
+
+function storeRecords(records) {
+    localStorage.setItem(
+        "emilionstudios_neon_records",
+        JSON.stringify(records)
+    );
+}
+
+function renderRecords() {
+    const records = getRecords();
+    const list = document.getElementById("recordList");
+
+    list.innerHTML = "";
+
+    records.slice(0, 5).forEach(record => {
+        const row = document.createElement("tr");
+
+        const nameCell = document.createElement("td");
+        const scoreCell = document.createElement("td");
+
+        nameCell.textContent = record.name;
+        scoreCell.textContent = record.score;
+
+        row.appendChild(nameCell);
+        row.appendChild(scoreCell);
+        list.appendChild(row);
+    });
+}
+
 function move(direction) {
-  if (!playing) return;
+    if (!playing || ending) return;
 
-  player = Math.max(0, Math.min(2, player + direction));
+    lane += direction;
 
-  if (player === obstacle) {
-    gameOver();
-    return;
-  }
+    if (lane < 0) lane = 0;
+    if (lane > 2) lane = 2;
 
-  draw();
+    draw();
+
+    if (lane === obstacleLane) {
+        endGame();
+    }
 }
 
-// CONTROLES DEL TECLADO
 document.addEventListener("keydown", function(event) {
-  if (event.key === "ArrowLeft") {
-    event.preventDefault();
-    move(-1);
-  }
+    if (event.key === "ArrowLeft") {
+        move(-1);
+    }
 
-  if (event.key === "ArrowRight") {
-    event.preventDefault();
-    move(1);
-  }
+    if (event.key === "ArrowRight") {
+        move(1);
+    }
 });
 
-// MOVIMIENTO DEL JUEGO
+function startGame() {
+    clearInterval(gameLoop);
+    clearTimeout(gameOverTimer);
+
+    lane = 1;
+    obstacleLane = Math.floor(Math.random() * 3);
+    coinLane = Math.floor(Math.random() * 3);
+
+    score = 0;
+    playing = true;
+    ending = false;
+
+    nameBox.style.display = "none";
+    message.textContent = "¡Corre!";
+    scoreText.textContent = "Puntos: 0";
+
+    draw();
+
+    gameLoop = setInterval(step, 700);
+}
+
 function step() {
-  if (player === coin) {
-    score += 10;
-  } else {
-    score += 1;
-  }
+    if (!playing || ending) return;
 
-  obstacle = Math.floor(Math.random() * 3);
-  coin = Math.floor(Math.random() * 3);
+    if (lane === coinLane) {
+        score += 10;
+        coinLane = Math.floor(Math.random() * 3);
+    } else {
+        score += 1;
+    }
 
-  draw();
+    obstacleLane = Math.floor(Math.random() * 3);
 
-  if (player === obstacle) {
-    gameOver();
-  }
+    scoreText.textContent = "Puntos: " + score;
+    draw();
+
+    if (lane === obstacleLane) {
+        endGame();
+    }
 }
 
-// INICIAR
-function start() {
-  clearInterval(timer);
+function endGame() {
+    if (ending || !playing) return;
 
-  document.getElementById("recordModal").style.display = "none";
+    ending = true;
+    playing = false;
 
-  player = 1;
-  obstacle = 0;
-  coin = 2;
-  score = 0;
-  playing = true;
+    clearInterval(gameLoop);
 
-  document.getElementById("message").textContent =
-    "¡A jugar! Esquiva los obstáculos.";
+    message.textContent = "💥 ¡CHOQUE!";
 
-  document.getElementById("startButton").textContent = "↻ REINICIAR";
-
-  draw();
-
-  timer = setInterval(step, 850);
+    // Esperar exactamente 1.5 segundos antes de GAME OVER
+    gameOverTimer = setTimeout(() => {
+        message.textContent = "GAME OVER";
+        nameBox.style.display = "block";
+        document.getElementById("playerName").focus();
+    }, 1500);
 }
 
-// PERDER
-function gameOver() {
-  playing = false;
-  clearInterval(timer);
-
-  document.getElementById("message").textContent =
-    "💥 ¡GAME OVER!";
-
-  document.getElementById("finalScore").textContent = score;
-  document.getElementById("playerName").value = "";
-
-  document.getElementById("recordModal").style.display = "flex";
-
-  document.getElementById("playerName").focus();
-}
-
-// GUARDAR NUEVO RÉCORD
 function saveRecord() {
-  const input = document.getElementById("playerName");
-  const name = input.value.trim().slice(0, 10);
+    const nameInput = document.getElementById("playerName");
+    const name = nameInput.value.trim().slice(0, 10);
 
-  if (!name) {
-    alert("¡Escribe tu nombre primero!");
-    input.focus();
-    return;
-  }
+    if (!name) {
+        nameInput.focus();
+        return;
+    }
 
-  let records = getRecords();
+    const records = getRecords();
 
-  records.push({
-    name: name,
-    score: score
-  });
+    records.push({
+        name: name,
+        score: score
+    });
 
-  records.sort((a, b) => b.score - a.score);
-  records = records.slice(0, 5);
+    records.sort((a, b) => b.score - a.score);
 
-  if (storeRecords(records)) {
+    storeRecords(records.slice(0, 5));
+
     renderRecords();
 
-    document.getElementById("recordModal").style.display = "none";
+    nameBox.style.display = "none";
+    message.textContent = "🏆 ¡BUEN JUEGO!";
 
-    document.getElementById("message").textContent =
-      "🏆 ¡RÉCORD GUARDADO!";
-
-    document.getElementById("startButton").textContent =
-      "▶ JUGAR OTRA VEZ";
-  }
+    nameInput.value = "";
 }
 
-// MOSTRAR RÉCORDS AL ABRIR
 renderRecords();
 draw();
-
 </script>
 
 </body>
